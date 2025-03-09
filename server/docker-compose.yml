@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # MongoDB service
+  mongo:
+    image: mongo:latest
+    container_name: code-tracker-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password}
+    networks:
+      - code-tracker-network
+
+  # Node.js API service
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: code-tracker-api
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    environment:
+      - PORT=3000
+      - NODE_ENV=${NODE_ENV:-development}
+      - MONGODB_URI=mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD:-password}@mongo:27017/code-tracker?authSource=admin
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    networks:
+      - code-tracker-network
+
+# Volumes
+volumes:
+  mongo-data:
+
+# Networks
+networks:
+  code-tracker-network:
+    driver: bridge
