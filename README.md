@@ -1,7 +1,7 @@
 # ردیاب کد برای VSCode
 
 <p align="center">
-  <img src="./docs/images/logo.png" alt="لوگوی ردیاب کد" width="200">
+  <img src="/vscode-extension/code.png" alt="لوگوی ردیاب کد" width="200">
 </p>
 
 <p align="center">
